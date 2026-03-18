@@ -28,9 +28,9 @@ const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, level }) => {
   const evaluationPhrase = getEvaluationPhrase(score);
 
   return (
-    <div className="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg">
+    <div className="flex flex-col items-center justify-center p-6 bg-[#1f1f1f] rounded-2xl border border-[#2a2a2a]">
       {/* 圆形仪表盘 */}
-      <div className="relative w-24 h-24 mb-3">
+      <div className="relative w-28 h-28 mb-4">
         <svg
           className="w-full h-full transform -rotate-90"
           viewBox="0 0 100 100"
@@ -41,46 +41,52 @@ const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, level }) => {
             cy="50"
             r="45"
             fill="none"
-            stroke="#e5e7eb"
+            stroke="#2a2a2a"
             strokeWidth="8"
           />
-          {/* 分数圆环 */}
+          {/* 分数圆环 - 金色渐变 */}
           <circle
             cx="50"
             cy="50"
             r="45"
             fill="none"
-            stroke="currentColor"
+            stroke="url(#goldGradient)"
             strokeWidth="8"
             strokeLinecap="round"
             strokeDasharray={`${score * 2.83} 283`}
-            className={scoreColorClass.replace('text-', 'text-').replace(' bg-', ' ')}
           />
+          {/* 金色渐变定义 */}
+          <defs>
+            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#f4d03f" />
+              <stop offset="100%" stopColor="#d4af37" />
+            </linearGradient>
+          </defs>
         </svg>
         
         {/* 分数显示 */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
-            <div className={`text-2xl font-bold ${scoreColorClass.split(' ')[0]}`}>
+            <div className="text-3xl font-bold text-[#d4af37]">
               {score.toFixed(1)}
             </div>
-            <div className="text-xs text-gray-500">/ 10.0</div>
+            <div className="text-xs text-[#6b6b6b]">/ 10.0</div>
           </div>
         </div>
       </div>
 
       {/* 评级标签 */}
-      <div className={`px-3 py-1 rounded-full text-sm font-medium mb-2 ${scoreColorClass}`}>
+      <div className="px-4 py-1.5 bg-gradient-to-r from-[#f4d03f] to-[#d4af37] text-[#0a0a0a] rounded-full text-sm font-bold mb-3">
         {level}
       </div>
 
       {/* 评价短语 */}
-      <div className="text-sm text-gray-600 text-center">
+      <div className="text-sm text-[#a0a0a0] text-center">
         {evaluationPhrase}
       </div>
 
       {/* 权重说明 */}
-      <div className="text-xs text-gray-400 mt-1">
+      <div className="text-xs text-[#6b6b6b] mt-2">
         加权计算
       </div>
     </div>

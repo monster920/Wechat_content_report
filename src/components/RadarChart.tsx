@@ -49,16 +49,13 @@ const RadarChart = ({ dimensions }: RadarChartProps) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-900">维度对比雷达图</h3>
-        <button className="text-sm text-blue-600 hover:text-blue-800">
-          折叠
-        </button>
+    <div className="bg-[#161616] border border-[#2a2a2a] rounded-2xl p-8 fade-in">
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-lg font-semibold text-[#d4af37]">维度能力分布图</h3>
       </div>
       
       {/* 雷达图容器 */}
-      <div className="flex justify-center mb-4">
+      <div className="flex justify-center mb-6">
         <svg
           ref={svgRef}
           width="300"
@@ -72,7 +69,7 @@ const RadarChart = ({ dimensions }: RadarChartProps) => {
               key={index}
               points={path}
               fill="none"
-              stroke="#e0e0e0"
+              stroke="#2a2a2a"
               strokeWidth="1"
             />
           ))}
@@ -80,8 +77,8 @@ const RadarChart = ({ dimensions }: RadarChartProps) => {
           {/* 数据区域 */}
           <polygon
             points={getRadarPath()}
-            fill="rgba(24, 144, 255, 0.3)"
-            stroke="#1890FF"
+            fill="rgba(212, 175, 55, 0.3)"
+            stroke="#d4af37"
             strokeWidth="2"
           />
           
@@ -96,8 +93,8 @@ const RadarChart = ({ dimensions }: RadarChartProps) => {
                 key={index}
                 cx={x}
                 cy={y}
-                r="4"
-                fill="#1890FF"
+                r="5"
+                fill="#d4af37"
               />
             );
           })}
@@ -105,8 +102,8 @@ const RadarChart = ({ dimensions }: RadarChartProps) => {
           {/* 轴标签 */}
           {dimensions.map((dim, index) => {
             const angle = index * angleStep - Math.PI / 2;
-            const x = centerX + (radius + 20) * Math.cos(angle);
-            const y = centerY + (radius + 20) * Math.sin(angle);
+            const x = centerX + (radius + 25) * Math.cos(angle);
+            const y = centerY + (radius + 25) * Math.sin(angle);
             return (
               <text
                 key={index}
@@ -115,7 +112,7 @@ const RadarChart = ({ dimensions }: RadarChartProps) => {
                 textAnchor="middle"
                 dominantBaseline="middle"
                 fontSize="12"
-                fill="#333"
+                fill="#a0a0a0"
               >
                 {dim.name}
               </text>
@@ -125,13 +122,13 @@ const RadarChart = ({ dimensions }: RadarChartProps) => {
       </div>
       
       {/* 统计数据 */}
-      <div className="text-center text-gray-600">
+      <div className="text-center text-[#a0a0a0]">
         <p className="text-sm">
-          超越 <span className="font-semibold text-green-600">{exceedPercent}%</span> 的同类型文章
+          超越 <span className="font-semibold text-[#d4af37]">{exceedPercent}%</span> 的同类型文章
         </p>
         {avgScore < 8.0 && (
-          <p className="text-sm text-orange-600 mt-1">
-            传播维度明显低于其他维度，建议重点优化
+          <p className="text-sm text-[#f4d03f] mt-2">
+            💡 传播维度明显低于其他维度，建议重点优化
           </p>
         )}
       </div>
