@@ -446,20 +446,25 @@ function extractNewFormatSubItems(markdown: string, dimensionName: string): any[
   const subItems: any[] = [];
   
   // 找到维度部分
-  const dimensionPattern = new RegExp(`### \\d+\\. ${dimensionName}维度[\\s\\S]*?\\n\\n`);
+  const dimensionPattern = new RegExp(`### \\d+\\. ${dimensionName}维度[\\s\\S]*?(?=\\n### |\\n## |$)`);
   const dimensionMatch = markdown.match(dimensionPattern);
   
   if (dimensionMatch) {
     // 提取表格中的子项
-    const tablePattern = /\| \*\*(.+?)\*\* \| (\d+) \| ([^|]+)/g;
+    // 匹配表格行格式: | **子项名** | 分数 | 分析内容 |
+    const tablePattern = /\| \*\*(.+?)\*\* \| (\d+) \| ([^|\n]+?)(?=\s*\|?\s*$)/gm;
     let match;
     
     while ((match = tablePattern.exec(dimensionMatch[0])) !== null) {
-      subItems.push({
-        name: match[1].trim(),
-        score: parseInt(match[2]),
-        analysis: match[3].trim()
-      });
+      const analysis = match[3].trim();
+      // 过滤掉表头和分隔行
+      if (match[1] !== '子项' && match[1] !== '评估子项' && analysis !== '分析') {
+        subItems.push({
+          name: match[1].trim(),
+          score: parseInt(match[2]),
+          analysis: analysis
+        });
+      }
     }
   }
   

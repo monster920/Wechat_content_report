@@ -6,6 +6,7 @@ import RadarChart from './components/RadarChart';
 import ActionList from './components/ActionList';
 import ExportToolbar from './components/ExportToolbar';
 import { fetchReport, mockReportData } from './api/service';
+import { exportReport } from './api/export';
 import type { ReportData } from './types';
 
 function App() {
@@ -55,8 +56,19 @@ function App() {
   };
 
   // 导出功能
-  const handleExport = (format: string) => {
-    alert(`导出为 ${format} 格式（功能开发中）`);
+  const handleExport = async (format: string) => {
+    if (!reportData) {
+      alert('请先生成报告后再导出');
+      return;
+    }
+    
+    try {
+      await exportReport(reportData, format);
+      console.log(`成功导出为 ${format} 格式`);
+    } catch (error) {
+      console.error('导出失败:', error);
+      alert(`导出失败: ${error instanceof Error ? error.message : '未知错误'}`);
+    }
   };
 
   // 一键改稿
