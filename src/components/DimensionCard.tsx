@@ -42,23 +42,27 @@ const DimensionCard: React.FC<DimensionCardProps> = ({ dimension, isActive, onCl
 
   return (
     <div 
-      className={`bg-[#161616] border rounded-2xl p-5 cursor-pointer transition-all ${
+      className={`glass-card p-6 cursor-pointer transition-all ${
         isActive 
-          ? 'border-[#d4af37] shadow-[0_0_20px_rgba(212,175,55,0.3)]' 
-          : 'border-[#2a2a2a] hover:border-[#3a3a3a]'
+          ? 'border-purple-500 shadow-[0_0_30px_rgba(139,92,246,0.4)]' 
+          : ''
       }`}
       onClick={onClick}
     >
       {/* 卡片头部 */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-3">
-          <span className="text-xl">📊</span>
-          <h3 className="font-semibold text-[#ffffff]">{dimension.name}</h3>
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500/50 to-cyan-500/50 flex items-center justify-center">
+            <span className="text-sm">📊</span>
+          </div>
+          <h3 className="font-semibold text-[#f8fafc]">{dimension.name}</h3>
         </div>
         <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-          dimension.status === '优秀' ? 'bg-[#d4af37] text-[#0a0a0a]' :
-          dimension.status === '良好' ? 'bg-[#2a2a2a] text-[#d4af37]' :
-          'bg-[#3a3a3a] text-[#a0a0a0]'
+          dimension.status === '优秀' 
+            ? 'bg-gradient-to-r from-purple-500 to-cyan-500 text-white' :
+          dimension.status === '良好' 
+            ? 'bg-black/30 text-[#a78bfa] border border-purple-500/30' :
+          'bg-black/30 text-[#94a3b8] border border-gray-500/30'
         }`}>
           {getStatusIcon(dimension.status)} {dimension.status}
         </span>
@@ -66,23 +70,23 @@ const DimensionCard: React.FC<DimensionCardProps> = ({ dimension, isActive, onCl
 
       {/* 权重和分数 */}
       <div className="flex items-center justify-between mb-3">
-        <span className="text-sm text-[#6b6b6b]">权重：{dimension.weight}</span>
-        <span className="text-sm font-medium text-[#d4af37]">
+        <span className="text-sm text-[#64748b]">权重：{dimension.weight}</span>
+        <span className="text-sm font-medium gradient-text">
           {dimension.score.toFixed(1)} / 10
         </span>
       </div>
 
       {/* 分数进度条 */}
-      <div className="w-full bg-[#1f1f1f] rounded-full h-2 mb-4">
+      <div className="w-full bg-black/30 rounded-full h-2 mb-4">
         <div 
-          className="h-2 rounded-full bg-gradient-to-r from-[#f4d03f] to-[#d4af37]"
+          className="h-2 rounded-full bg-gradient-to-r from-purple-500 to-cyan-500 shadow-lg shadow-purple-500/30"
           style={{ width: getScoreBarWidth(dimension.score) }}
         />
       </div>
 
       {/* 分析依据预览 */}
       {dimension.analysis && (
-        <div className="text-sm text-[#a0a0a0] mb-3 line-clamp-2">
+        <div className="text-sm text-[#94a3b8] mb-3 line-clamp-2">
           {dimension.analysis}
         </div>
       )}
@@ -94,39 +98,40 @@ const DimensionCard: React.FC<DimensionCardProps> = ({ dimension, isActive, onCl
             e.stopPropagation();
             setIsExpanded(!isExpanded);
           }}
-          className="text-[#d4af37] text-sm hover:text-[#f4d03f] transition-colors"
+          className="text-[#a78bfa] text-sm hover:text-[#c4b5fd] transition-colors flex items-center space-x-1"
         >
-          {isExpanded ? '收起详情 ↑' : '查看详情 ↓'}
+          <span>{isExpanded ? '收起详情' : '查看详情'}</span>
+          <span>{isExpanded ? '↑' : '↓'}</span>
         </button>
       </div>
 
       {/* 详情表格（展开时显示） */}
       {isExpanded && dimension.subItems && dimension.subItems.length > 0 && (
-        <div className="mt-4 pt-4 border-t border-[#2a2a2a]">
+        <div className="mt-4 pt-4 border-t border-purple-500/20">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-[#6b6b6b]">
-                <th className="pb-2 text-[#d4af37]">子项</th>
-                <th className="pb-2 text-[#d4af37]">分数</th>
-                <th className="pb-2 text-[#d4af37]">分析依据</th>
+              <tr className="text-left text-[#64748b]">
+                <th className="pb-2 gradient-text">子项</th>
+                <th className="pb-2 gradient-text">分数</th>
+                <th className="pb-2 gradient-text">分析依据</th>
               </tr>
             </thead>
             <tbody>
               {dimension.subItems.map((item, index) => (
-                <tr key={index} className="border-t border-[#2a2a2a]">
-                  <td className="py-3 text-[#c0c0c0]">{item.name}</td>
+                <tr key={index} className="border-t border-purple-500/10">
+                  <td className="py-3 text-[#cbd5e1]">{item.name}</td>
                   <td className="py-3">
                     <div className="flex items-center">
-                      <div className="w-16 bg-[#1f1f1f] rounded-full h-1.5 mr-2">
+                      <div className="w-16 bg-black/30 rounded-full h-1.5 mr-2">
                         <div 
-                          className="h-1.5 rounded-full bg-gradient-to-r from-[#f4d03f] to-[#d4af37]"
+                          className="h-1.5 rounded-full bg-gradient-to-r from-purple-500 to-cyan-500 shadow-lg shadow-purple-500/30"
                           style={{ width: `${(item.score / 10) * 100}%` }}
                         />
                       </div>
-                      <span className="text-[#d4af37]">{item.score.toFixed(1)}</span>
+                      <span className="gradient-text">{item.score.toFixed(1)}</span>
                     </div>
                   </td>
-                  <td className="py-3 text-[#808080]">{item.analysis}</td>
+                  <td className="py-3 text-[#64748b]">{item.analysis}</td>
                 </tr>
               ))}
             </tbody>
