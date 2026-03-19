@@ -2,8 +2,8 @@
 import type { ReportData, ApiRequest, ApiResponse } from '../types/index';
 
 // API配置
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://172.18.232.211';
-const API_TOKEN = import.meta.env.VITE_API_TOKEN || 'app-ppA9xlo2jovEfbA5fnBeyBzM';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_TOKEN = import.meta.env.VITE_API_TOKEN;
 
 /**
  * 获取公众号文章分析报告

@@ -5,10 +5,19 @@ interface DimensionCardProps {
   dimension: DimensionData;
   isActive: boolean;
   onClick: () => void;
+  isExpanded?: boolean;
+  onExpandedChange?: (expanded: boolean) => void;
 }
 
-const DimensionCard: React.FC<DimensionCardProps> = ({ dimension, isActive, onClick }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+const DimensionCard: React.FC<DimensionCardProps> = ({ 
+  dimension, 
+  isActive, 
+  onClick,
+  isExpanded: propsIsExpanded,
+  onExpandedChange
+}) => {
+  const [localIsExpanded, setIsExpanded] = useState(false);
+  const isExpanded = propsIsExpanded !== undefined ? propsIsExpanded : localIsExpanded;
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -42,51 +51,68 @@ const DimensionCard: React.FC<DimensionCardProps> = ({ dimension, isActive, onCl
 
   return (
     <div 
-      className={`glass-card p-6 cursor-pointer transition-all ${
-        isActive 
-          ? 'border-purple-500 shadow-[0_0_30px_rgba(139,92,246,0.4)]' 
-          : ''
+      className={`card-primary p-4 cursor-pointer transition-all duration-200 ${
+        isExpanded 
+          ? 'fixed inset-4 z-50 overflow-auto' 
+          : isActive 
+            ? 'border-accent ring-2 ring-accent/20' 
+            : ''
       }`}
       onClick={onClick}
     >
       {/* 卡片头部 */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500/50 to-cyan-500/50 flex items-center justify-center">
-            <span className="text-sm">📊</span>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center space-x-2">
+          <div className="w-7 h-7 rounded-md bg-tertiary flex items-center justify-center border border-light">
+            <span className="text-xs">📊</span>
           </div>
-          <h3 className="font-semibold text-[#f8fafc]">{dimension.name}</h3>
+          <h4 className="font-medium text-primary">{dimension.name}</h4>
         </div>
-        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-          dimension.status === '优秀' 
-            ? 'bg-gradient-to-r from-purple-500 to-cyan-500 text-white' :
-          dimension.status === '良好' 
-            ? 'bg-black/30 text-[#a78bfa] border border-purple-500/30' :
-          'bg-black/30 text-[#94a3b8] border border-gray-500/30'
-        }`}>
-          {getStatusIcon(dimension.status)} {dimension.status}
-        </span>
+        <div className="flex items-center space-x-2">
+          {isExpanded && (
+            <button 
+              className="text-xs text-secondary hover:text-primary px-2 py-1"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onExpandedChange) {
+                  onExpandedChange(false);
+                }
+              }}
+            >
+              ✕ 关闭
+            </button>
+          )}
+          <span className={`px-2 py-0.5 rounded text-[10px] font-medium ${
+            dimension.status === '优秀' 
+              ? 'bg-success-bg text-success border border-success/20' :
+            dimension.status === '良好' 
+              ? 'bg-accent-bg text-accent-primary border border-accent/20' :
+            'bg-warning-bg text-warning border border-warning/20'
+          }`}>
+            {getStatusIcon(dimension.status)} {dimension.status}
+          </span>
+        </div>
       </div>
 
       {/* 权重和分数 */}
-      <div className="flex items-center justify-between mb-3">
-        <span className="text-sm text-[#64748b]">权重：{dimension.weight}</span>
-        <span className="text-sm font-medium gradient-text">
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-xs text-muted">权重：{dimension.weight}</span>
+        <span className="text-xs font-medium text-primary">
           {dimension.score.toFixed(1)} / 10
         </span>
       </div>
 
       {/* 分数进度条 */}
-      <div className="w-full bg-black/30 rounded-full h-2 mb-4">
+      <div className="w-full bg-tertiary rounded-full h-1.5 mb-3">
         <div 
-          className="h-2 rounded-full bg-gradient-to-r from-purple-500 to-cyan-500 shadow-lg shadow-purple-500/30"
+          className="h-1.5 rounded-full bg-accent"
           style={{ width: getScoreBarWidth(dimension.score) }}
         />
       </div>
 
       {/* 分析依据预览 */}
       {dimension.analysis && (
-        <div className="text-sm text-[#94a3b8] mb-3 line-clamp-2">
+        <div className="text-xs text-secondary mb-3 line-clamp-2">
           {dimension.analysis}
         </div>
       )}
@@ -96,9 +122,15 @@ const DimensionCard: React.FC<DimensionCardProps> = ({ dimension, isActive, onCl
         <button
           onClick={(e) => {
             e.stopPropagation();
-            setIsExpanded(!isExpanded);
+            const newExpanded = !isExpanded;
+            if (propsIsExpanded === undefined) {
+              setIsExpanded(newExpanded);
+            }
+            if (onExpandedChange) {
+              onExpandedChange(newExpanded);
+            }
           }}
-          className="text-[#a78bfa] text-sm hover:text-[#c4b5fd] transition-colors flex items-center space-x-1"
+          className="text-secondary text-xs hover:text-primary transition-colors flex items-center space-x-1"
         >
           <span>{isExpanded ? '收起详情' : '查看详情'}</span>
           <span>{isExpanded ? '↑' : '↓'}</span>
@@ -107,7 +139,7 @@ const DimensionCard: React.FC<DimensionCardProps> = ({ dimension, isActive, onCl
 
       {/* 详情表格（展开时显示） */}
       {isExpanded && dimension.subItems && dimension.subItems.length > 0 && (
-        <div className="mt-4 pt-4 border-t border-purple-500/20">
+        <div className="mt-4 pt-4 border-t border-primary">
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left text-[#64748b]">

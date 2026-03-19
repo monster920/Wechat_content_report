@@ -28,9 +28,9 @@ const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, level }) => {
   const evaluationPhrase = getEvaluationPhrase(score);
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 bg-black/30 rounded-2xl border border-purple-500/30 backdrop-blur-sm">
+    <div className="flex flex-col items-center justify-center p-4 bg-tertiary rounded-lg border border-light">
       {/* 圆形仪表盘 */}
-      <div className="relative w-28 h-28 mb-4">
+      <div className="relative w-20 h-20 mb-3">
         <svg
           className="w-full h-full transform -rotate-90"
           viewBox="0 0 100 100"
@@ -41,54 +41,41 @@ const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, level }) => {
             cy="50"
             r="45"
             fill="none"
-            stroke="rgba(139, 92, 246, 0.2)"
-            strokeWidth="8"
+            stroke="#e5e7eb"
+            strokeWidth="6"
           />
-          {/* 分数圆环 - 紫蓝渐变 */}
+          {/* 分数圆环 */}
           <circle
             cx="50"
             cy="50"
             r="45"
             fill="none"
-            stroke="url(#purpleCyanGradient)"
-            strokeWidth="8"
+            stroke="#1e40af"
+            strokeWidth="6"
             strokeLinecap="round"
             strokeDasharray={`${score * 2.83} 283`}
-            className="drop-shadow-lg"
           />
-          {/* 紫蓝渐变定义 */}
-          <defs>
-            <linearGradient id="purpleCyanGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#8b5cf6" />
-              <stop offset="100%" stopColor="#06b6d4" />
-            </linearGradient>
-          </defs>
         </svg>
         
-        {/* 分数显示 - 霓虹灯效果 */}
+        {/* 分数显示 */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
-            <div className="text-3xl font-bold gradient-text text-neon">
+            <div className="text-lg font-bold text-primary">
               {score.toFixed(1)}
             </div>
-            <div className="text-xs text-[#64748b]">/ 10.0</div>
+            <div className="text-[10px] text-muted">/ 10.0</div>
           </div>
         </div>
       </div>
 
-      {/* 评级标签 - 霓虹灯效果 */}
-      <div className="px-5 py-2 bg-gradient-to-r from-purple-500 to-cyan-500 text-white rounded-full text-sm font-bold mb-3 shadow-lg shadow-purple-500/30">
+      {/* 评级标签 */}
+      <div className="px-3 py-1 bg-accent border border-accent text-primary rounded-full text-xs font-medium mb-2">
         {level}
       </div>
 
       {/* 评价短语 */}
-      <div className="text-sm text-[#94a3b8] text-center">
+      <div className="text-xs text-secondary text-center max-w-[120px]">
         {evaluationPhrase}
-      </div>
-
-      {/* 权重说明 */}
-      <div className="text-xs text-[#64748b] mt-2">
-        加权计算
       </div>
     </div>
   );

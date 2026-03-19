@@ -51,15 +51,15 @@ const RadarChart = ({ dimensions }: RadarChartProps) => {
   return (
     <div className="glass-card p-8 fade-in">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold gradient-text">维度能力分布图</h3>
+        <h3 className="text-lg font-semibold text-primary">维度能力分布图</h3>
       </div>
       
       {/* 雷达图容器 */}
       <div className="flex justify-center mb-6">
         <svg
           ref={svgRef}
-          width="300"
-          height="300"
+          width="280"
+          height="280"
           viewBox="0 0 300 300"
           className="max-w-full"
         >
@@ -69,31 +69,18 @@ const RadarChart = ({ dimensions }: RadarChartProps) => {
               key={index}
               points={path}
               fill="none"
-              stroke="rgba(139, 92, 246, 0.2)"
+              stroke="#e5e7eb"
               strokeWidth="1"
             />
           ))}
           
-          {/* 数据区域 - 渐变填充 */}
+          {/* 数据区域 */}
           <polygon
             points={getRadarPath()}
-            fill="url(#radarGradient)"
-            stroke="url(#purpleCyanGradient)"
+            fill="rgba(37, 99, 235, 0.2)"
+            stroke="#2563eb"
             strokeWidth="2"
-            className="drop-shadow-lg"
           />
-          
-          {/* 渐变定义 */}
-          <defs>
-            <linearGradient id="radarGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="rgba(139, 92, 246, 0.4)" />
-              <stop offset="100%" stopColor="rgba(6, 182, 212, 0.4)" />
-            </linearGradient>
-            <linearGradient id="purpleCyanGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#8b5cf6" />
-              <stop offset="100%" stopColor="#06b6d4" />
-            </linearGradient>
-          </defs>
           
           {/* 数据点 */}
           {dimensions.map((dim, index) => {
@@ -107,8 +94,7 @@ const RadarChart = ({ dimensions }: RadarChartProps) => {
                 cx={x}
                 cy={y}
                 r="6"
-                fill="url(#purpleCyanGradient)"
-                className="drop-shadow-lg"
+                fill="#2563eb"
               />
             );
           })}
@@ -126,7 +112,7 @@ const RadarChart = ({ dimensions }: RadarChartProps) => {
                 textAnchor="middle"
                 dominantBaseline="middle"
                 fontSize="12"
-                fill="#94a3b8"
+                fill="#6b7280"
               >
                 {dim.name}
               </text>
@@ -136,12 +122,12 @@ const RadarChart = ({ dimensions }: RadarChartProps) => {
       </div>
       
       {/* 统计数据 */}
-      <div className="text-center text-[#94a3b8]">
+      <div className="text-center text-secondary">
         <p className="text-sm">
-          超越 <span className="font-semibold gradient-text">{exceedPercent}%</span> 的同类型文章
+          超越 <span className="font-semibold text-primary">{exceedPercent}%</span> 的同类型文章
         </p>
         {avgScore < 8.0 && (
-          <p className="text-sm text-[#a78bfa] mt-2">
+          <p className="text-sm text-secondary mt-2">
             💡 传播维度明显低于其他维度，建议重点优化
           </p>
         )}
